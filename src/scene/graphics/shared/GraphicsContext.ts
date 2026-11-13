@@ -1201,7 +1201,15 @@ export class GraphicsContext extends EventEmitter<{
                     {
                         for (let j = 0; j < holeShapes.length; j++)
                         {
-                            if (holeShapes[j].shape.contains(transformedPoint.x, transformedPoint.y))
+                            const holeShape = holeShapes[j];
+                            const holeTransform = holeShape.transform;
+                            // holes live in the same (path) space as the shape being hit-tested,
+                            // but carry their own transform from when they were drawn
+                            const holePoint = holeTransform
+                                ? holeTransform.applyInverse(point, tmpPoint)
+                                : point;
+
+                            if (holeShape.shape.contains(holePoint.x, holePoint.y))
                             {
                                 hasHit = false;
                             }

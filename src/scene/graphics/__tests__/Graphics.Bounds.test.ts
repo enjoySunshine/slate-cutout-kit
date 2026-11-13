@@ -241,6 +241,39 @@ describe('Graphics Bounds', () =>
             expect(graphics.context.containsPoint(new Point(5, 5))).toBe(false);
         });
 
+        it('should take the transforms of a hole into account', () =>
+        {
+            const graphics = new Graphics();
+
+            graphics
+                .rect(0, 0, 200, 200)
+                .fill()
+                .translateTransform(40, 50)
+                .rect(10, 10, 20, 20)
+                .cut();
+
+            expect(graphics.context.containsPoint(new Point(20, 20))).toBe(true);
+            expect(graphics.context.containsPoint(new Point(60, 70))).toBe(false);
+            expect(graphics.context.containsPoint(new Point(100, 100))).toBe(true);
+        });
+
+        it('should take the transforms of a rotated hole into account', () =>
+        {
+            const graphics = new Graphics();
+
+            graphics
+                .rect(0, 0, 200, 200)
+                .fill()
+                .translateTransform(100, -20)
+                .rotateTransform(Math.PI / 2)
+                .rect(10, 0, 20, 10)
+                .cut();
+
+            expect(graphics.context.containsPoint(new Point(15, 5))).toBe(true);
+            expect(graphics.context.containsPoint(new Point(15, 120))).toBe(false);
+            expect(graphics.context.containsPoint(new Point(100, 100))).toBe(true);
+        });
+
         // note: failing, needs investigation
         // eslint-disable-next-line jest/no-disabled-tests
         it.skip('should handle extra shapes in holes', () =>

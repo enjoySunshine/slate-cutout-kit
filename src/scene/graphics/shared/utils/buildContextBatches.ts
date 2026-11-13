@@ -279,6 +279,13 @@ function getHoleArrays(holePrimitives: ShapePrimitiveWithHoles[])
 
         if (holeBuilder.build(holePrimitive, holePoints))
         {
+            const transform = holePrimitives[k].transform;
+
+            if (transform)
+            {
+                transformVertices(holePoints, transform);
+            }
+
             holeArrays.push(holePoints);
         }
     }
